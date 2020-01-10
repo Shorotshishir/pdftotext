@@ -13,6 +13,12 @@ jobs:
     - os: "linux"
       python: "3.8"
       env: "CPPFLAGS=--coverage"
+    - os: "osx"
+      osx_image: "xcode7.3"
+      language: "shell"
+    - os: "osx"
+      osx_image: "xcode11.3"
+      language: "shell"
 
 before_install:
   - |
@@ -22,7 +28,10 @@ before_install:
     fi
   - |
     if [[ $TRAVIS_OS_NAME == "osx" ]]; then
-    brew install pkg-config poppler
+    brew update
+    brew upgrade pkg-config || true
+    brew upgrade poppler || true
+    brew upgrade python || true
     fi
 
 before_script:
@@ -32,6 +41,7 @@ before_script:
     fi
 
 script:
+  - python --version
   - python setup.py test
   - |
     if [[ $TRAVIS_OS_NAME == "linux" && $TRAVIS_PYTHON_VERSION == "3.8" ]]; then
